@@ -2,10 +2,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const key = require('./resources/security/mongoose.key');
+const mongooseUser = require('./resources/security/mongoose.user');
 
 /* connection à la base de donnée MongoDB*/
-mongoose.connect('mongodb+srv://seb:' + key + '@cluster0.wy5mq.mongodb.net/piiquante?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://' + mongooseUser.id + ':' + mongooseUser.key + '@cluster0.wy5mq.mongodb.net/piiquante?retryWrites=true&w=majority',
 { useNewUrlParser: true,
   useUnifiedTopology: true })
 .then(() => console.log(' Connection to MongoDB successful ! '))
