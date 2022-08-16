@@ -1,4 +1,4 @@
-# Construisez un site e-commerce en JavaScript - Partie Frontend
+# Construisez une API sécurisée pour une application d'avis gastronomiques
 
 Projet 6 Construisez une API sécurisée pour une application d'avis gastronomiques
 
