@@ -1,6 +1,6 @@
 # Construisez une API sécurisée pour une application d'avis gastronomiques
 
-Projet 6 Construisez une API sécurisée pour une application d'avis gastronomiques
+Projet 6 de la formation OpenClassroom en Développement Web
 
 ## Scénario
 
