@@ -38,10 +38,6 @@ exports.login = (req, res, next) => {
     /* récupération de l'utilisateur dans la BDD*/
     userModel.findOne({ email: req.body.email })
         .then(user => {
-            /* si l'utilisateur n'éxiste pas*/
-            if (!user) {
-                return res.status(401).json({ message: ' Incorrect login/password pair ! ' });
-            }
             /* vérification si le password envoyé correspond à celui de la BDD*/
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
@@ -53,12 +49,12 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                                 { userId: user._id },
-                                'bQeThWmYq3t6w9z$C&F)J@NcRfUjXn2r',
-                                { expiresIn: '24h' }
+                                process.env.TOKEN || 'token',
+                                { expiresIn: process.env.TOKEN_EXPIRATION || '1h' }
                             )
                     });
                 })
                 .catch( error => res.status(500).json({ error }));
         })
-        .catch( error => res.status(500).json({ error }));
+        .catch( error => res.status(401).json({ message: ' Incorrect login/password pair ! ' }));
  };

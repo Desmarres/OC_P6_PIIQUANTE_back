@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
 
         /*extraction de l'userId*/
-        const decodedToken = jwt.verify(token, 'bQeThWmYq3t6w9z$C&F)J@NcRfUjXn2r');
+        const decodedToken = jwt.verify(token, process.env.TOKEN || '' );
         const userId = decodedToken.userId;
         
         /* MAJ de l'attribut userId*/
