@@ -1,4 +1,7 @@
+/* importation des ressources*/
 const mongoose = require('mongoose');
+
+/* initialisation des constantes de connexions*/
 const userName = process.env.DB_USERNAME || '';
 const password = process.env.DB_PASSWORD || '';
 const serverName = process.env.DB_SERVER_NAME || '';

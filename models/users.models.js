@@ -1,4 +1,4 @@
-/* importation des frameworks et modules*/
+/* importation des ressources*/
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 

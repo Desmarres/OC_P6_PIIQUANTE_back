@@ -1,4 +1,4 @@
-/* importation des frameworks et modules*/
+/* importation des ressources*/
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -8,6 +8,7 @@ const { connect } = require('./middleware/db.config');
 const userRoutes = require('./routes/user.routes');
 const sauceRoutes = require('./routes/sauces.routes');
 
+/*connexion Monggose*/
 connect();
 
 /* appel de la méthode express*/

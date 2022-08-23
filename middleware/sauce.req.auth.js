@@ -1,6 +1,7 @@
-/* importation du package jsonwebtoken*/
+/* importation des ressources*/
 const jwt = require('jsonwebtoken');
 
+/*vérification de la validité de l'authentification*/
 module.exports = (req, res, next) => {
     try {
         /* récupération du token*/

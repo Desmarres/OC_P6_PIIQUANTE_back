@@ -1,4 +1,4 @@
-/* importation models, middleware et package*/
+/* importation des ressources*/
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -7,11 +7,6 @@ const userModel = require('../models/users.models');
 
 /* enregistrement nouvel utilisateur*/
 exports.signup = (req, res, next) => {
-    /* vérification des érreurs dans la requête*/
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     /* hachage du password*/
     bcrypt.hash(req.body.password,10)
         .then(passwordHash => {
@@ -30,11 +25,6 @@ exports.signup = (req, res, next) => {
 
 /* vérification de la connection*/
 exports.login = (req, res, next) => {
-    /* vérification des érreurs dans la requête*/
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     /* récupération de l'utilisateur dans la BDD*/
     userModel.findOne({ email: req.body.email })
         .then(user => {
