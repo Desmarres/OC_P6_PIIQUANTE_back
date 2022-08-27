@@ -22,7 +22,7 @@ exports.signup = [
     .exists({ checkFalsy: true})
     .withMessage(' The password is missing ! ')
     .isString()
-    .withMessage(' Bad password ! ')
+    .withMessage(' Wrong format of password ! ')
     .isStrongPassword({
         minLength: 8,
         minNumbers: 1,

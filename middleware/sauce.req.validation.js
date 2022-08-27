@@ -1,10 +1,11 @@
 /* importation des ressources*/
-const { body, param, header } = require('express-validator');
+const { body, param } = require('express-validator');
+const fs = require('fs');
 const sauceModel = require('../models/sauces.models');
 
 
 /* vérification de la conformité de l'Id sauce */
-exports.idSauce = [
+idSauce = [
     param('id')
     .isString()
     .withMessage(' Bad id ! ')
@@ -16,12 +17,29 @@ exports.idSauce = [
 ];
 
 /* vérification de la conformité des éléments de sauce*/
-exports.sauce = (req, res, next) => {
+sauce = (req, res, next) => {
     try{
-        /* mise en format JSON si la requête arrive sous la forme 'form-data'*/
-        const sauceObject = req.file ? {
-            ...JSON.parse( req.body.sauce )
-        } : { ...req.body };
+        let sauceObject = {};
+        if (req.file){
+            if (req.body.sauce){
+                /* mise en format JSON si la requête arrive sous la forme 'form-data'*/
+                sauceObject = {...JSON.parse( req.body.sauce )};
+            }
+            else {
+                /* suppression de l'image dans le dossier*/
+                fs.unlink(`resources/images/${req.file.filename}`, ( error ) => {
+                    if (error) throw error;
+                });           
+                throw ' Missing arguments ! ';
+            }
+
+        }
+        else if (req.body) {
+            sauceObject = { ...req.body};
+        }
+        else {
+            throw ' Missing arguments ! ';
+        }
 
         if (!sauceObject.name || 
             !sauceObject.manufacturer || 
@@ -50,7 +68,7 @@ exports.sauce = (req, res, next) => {
 };
 
 /* vérification de la conformité des éléments envoyés*/
-exports.managementSauceLike = [
+managementSauceLike = [
     body('userId')
     .exists({ checkFalsy: true})
     .withMessage(' You are not identified ! ')
@@ -68,3 +86,6 @@ exports.managementSauceLike = [
     .withMessage(' Incorrect argument ! ')
 
 ];
+
+
+module.exports = { idSauce, sauce, managementSauceLike };

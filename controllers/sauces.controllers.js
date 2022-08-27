@@ -1,6 +1,7 @@
 /* importation des ressources*/
 const sauceModel = require('../models/sauces.models');
 const fs = require('fs');
+const { sauce } = require('../middleware/sauce.req.validation');
 
 /* récupère l'ensemble des sauces de la BDD*/
 exports.getAllSauce = (req, res, next) => {
@@ -19,28 +20,33 @@ exports.getOneSauce = (req, res, next) => {
 
 /* ajoute une sauce à la BDD avec l'objet et l'image reçu*/
 exports.createSauce = (req, res, next) => {
-    /* mise en format JSON*/
-    const sauceObject = JSON.parse(req.body.sauce);
+    if (!req.file){
+        res.status(400).json({ message : " Bad request " }); 
+    }
+    else {
+        /* mise en format JSON*/
+        const sauceObject = JSON.parse(req.body.sauce);
 
-    /* suppression des éléments non-fiable reçus*/
-    delete sauceObject._id;
-    delete sauceObject._userId;
+        /* suppression des éléments non-fiable reçus*/
+        delete sauceObject._id;
+        delete sauceObject.userId;
 
-    /* création du model sauce*/
-    const sauce = new sauceModel({
-        ...sauceObject,
-        userId: req.auth.userId,
-        imageUrl: `${ req.protocol }://${ req.get('host') }/resources/images/${ req.file.filename }`,
-        likes: 0,
-        dislikes: 0,
-        usersLiked: [],
-        usersDisliked: []
-    });
+        /* création du model sauce*/
+        const sauce = new sauceModel({
+            ...sauceObject,
+            userId: req.auth.userId,
+            imageUrl: `${ req.protocol }://${ req.get('host') }/resources/images/${ req.file.filename }`,
+            likes: 0,
+            dislikes: 0,
+            usersLiked: [],
+            usersDisliked: []
+        });
 
-    /* enregistrement de la sauce dans la BDD*/
-    sauce.save()
-        .then(() => { res.status(201).json({ message : 'The sauce is created !'}) })
-        .catch( error => { res.status(500).json({ error })})
+        /* enregistrement de la sauce dans la BDD*/
+        sauce.save()
+            .then(() => { res.status(201).json({ message : 'The sauce is created !'}) })
+            .catch( error => { res.status(500).json({ error })})
+    }
 };
 
 /* modification d'une sauce dans la BDD avec l'objet et/ou l'image reçu*/
@@ -52,7 +58,7 @@ exports.modifySauce = (req, res, next) => {
     } : { ...req.body };
 
     /* suppression de l'élément non-fiable reçu*/
-    delete sauceObject._userId;
+    delete sauceObject.userId;
 
     /* récupération de l'élément dans la BDD*/
     sauceModel.findOne({ _id: req.params.id })
@@ -62,7 +68,7 @@ exports.modifySauce = (req, res, next) => {
                 res.status(403).json({ message : " 403: unauthorized request " });
             }
             else {
-                if ( req.file && sauceObject.imageUrl != sauce.imageUrl) {
+                if ( req.file ) {
                     /* récupération de l'URL de l'image*/
                     const filename = sauce.imageUrl.split('/images/')[1];
 
@@ -72,8 +78,16 @@ exports.modifySauce = (req, res, next) => {
                         console.log( ' Old image removed from folder ! ');
                     });
                 }
+                
                 /* mise à jour du produit dans la BDD*/
-                sauceModel.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                sauceModel.updateOne({ _id: req.params.id }, { 
+                        name: sauceObject.name,
+                        manufacturer: sauceObject.manufacturer,
+                        description: sauceObject.description,
+                        mainPepper: sauceObject.mainPepper,
+                        imageUrl: sauceObject.imageUrl,
+                        heat: sauceObject.heat,
+                        _id: req.params.id })
                     .then(() => res.status(200).json({ message: " Modification of the sauce successful ! " }))
                     .catch( error => res.status(500).json({ error }));
             }
