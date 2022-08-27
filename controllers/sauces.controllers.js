@@ -6,14 +6,14 @@ const fs = require('fs');
 exports.getAllSauce = (req, res, next) => {
     sauceModel.find()
         .then((sauces) => res.status(200).json(sauces))
-        .catch( error => res.status(400).json({ error }));    
+        .catch( error => res.status(500).json({ error }));    
 };
 
 /* récupère une sauce de la BDD correspondant à l'Id reçu*/
 exports.getOneSauce = (req, res, next) => {
     sauceModel.findOne( { _id: req.params.id } )
         .then( sauce => res.status(200).json(sauce))
-        .catch( error => res.status(404).json({ error }));
+        .catch( error => res.status(500).json({ error }));
     
 };
 
@@ -40,7 +40,7 @@ exports.createSauce = (req, res, next) => {
     /* enregistrement de la sauce dans la BDD*/
     sauce.save()
         .then(() => { res.status(201).json({ message : 'The sauce is created !'}) })
-        .catch( error => { res.status(400).json({ error })})
+        .catch( error => { res.status(500).json({ error })})
 };
 
 /* modification d'une sauce dans la BDD avec l'objet et/ou l'image reçu*/
@@ -75,10 +75,10 @@ exports.modifySauce = (req, res, next) => {
                 /* mise à jour du produit dans la BDD*/
                 sauceModel.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
                     .then(() => res.status(200).json({ message: " Modification of the sauce successful ! " }))
-                    .catch( error => res.status(401).json({ error }));
+                    .catch( error => res.status(500).json({ error }));
             }
         })
-        .catch( error => res.status(400).json({ error }));
+        .catch( error => res.status(500).json({ error }));
 };
 
 /* suppression d'une sauce dans la BDD */
@@ -99,7 +99,7 @@ exports.deleteSauce = (req, res, next) => {
                     /* suprression de l'image dans la BDD*/
                     sauceModel.deleteOne({ _id: req.params.id })
                         .then(() => res.status(200).json({ message : ' The sauce has been removed ! ' }))
-                        .catch( error => res.status(401).json({ error }));
+                        .catch( error => res.status(500).json({ error }));
                 });
             }
         })
@@ -114,101 +114,62 @@ exports.managementSauceLike = (req, res, next) => {
             /* recherche des utilisatuers dans les tableaux usersLiked et usersDislike*/
             const usersLikedIndex = sauce.usersLiked.findIndex(userId => userId === req.auth.userId);
             const usersDislikedIndex = sauce.usersDisliked.findIndex(userId => userId === req.auth.userId);
-            /* suivant la valeur du like de la requête*/
-            switch ( req.body.like ) {
-                /* like*/
-                case 1 : {
-                    /* si l'utilisateur est déjà présent dans le tableau usersLiked*/
-                    if ( usersLikedIndex !== -1 ) {
-                            res.status(401).json({ message: " You have already 'liked' this sauce ! " });
-                    }
-                    else {
-                        /* si l'utilisateur est présent dans le tableau usersDisliked*/
-                        if ( usersDislikedIndex !== -1 ){
-                            /* dislikes : suppression de l'uilisateur et MAJ du nombres*/
-                            sauce.usersDisliked.splice(usersDislikedIndex,1);
-                            sauce.dislikes -= 1;
-                        }
-                        /* likes : ajout de l'utilisateur et MAJ du nombres*/
-                        sauce.usersLiked.push(req.auth.userId);
-                        sauce.likes += 1;
-                        
-                        /* mise à jour du produit dans la BDD*/
-                        sauceModel.updateOne({ _id: req.params.id}, { 
-                            $set : {
-                                likes: sauce.likes,
-                                dislikes: sauce.dislikes,
-                                usersLiked: sauce.usersLiked,
-                                usersDisliked: sauce.usersDisliked
-                            }})
-                            .then(() => res.status(200).json({ message: " successful 'like' of this sauce ! " }))
-                            .catch( error => res.status(401).json({ error }));
-                    }
-                    break;
-                }
-                /* annulation du like ou dislike*/
-                case 0 : {
-                    /* si l'utilisateur n'est pas présent dans les tableaux*/
-                    if (( usersLikedIndex === -1 ) && ( usersDislikedIndex === -1 )){
-                        res.status(401).json({ message: " You didn't have a 'like' or 'dislike' for this sauce ! " });
-                    } else {
-                        /* si l'utilisateur est présent dans le tableau usersDisLiked*/
-                        if ( usersLikedIndex !== -1 ) {
-                            /* dislikes : suppression de l'uilisateur et MAJ du nombres*/
-                            sauce.usersLiked.splice(usersLikedIndex,1);
-                            sauce.likes -= 1;
-                        } else {
-                            /* likes : suppression de l'uilisateur et MAJ du nombres*/
-                            sauce.usersDisliked.splice(usersDislikedIndex,1);
-                            sauce.dislikes -= 1;
-                        }
-                        /* mise à jour du produit dans la BDD*/
-                        sauceModel.updateOne({ _id: req.params.id}, { 
-                            $set : {
-                                likes: sauce.likes,
-                                dislikes: sauce.dislikes,
-                                usersLiked: sauce.usersLiked,
-                                usersDisliked: sauce.usersDisliked
-                            }})
-                            .then(() => res.status(200).json({ message: " Cancellation of the 'like' or 'dislike' successful ! " }))
-                            .catch( error => res.status(401).json({ error }));
-                    }
-                    break;
-                }
-                /* dislikes*/
-                case -1 : {
-                    /* si l'utilisateur est déjà présent dans le tableau usersDisliked*/
-                    if ( usersDislikedIndex !== -1 ) {
-                            res.status(401).json({ message: " You have already 'disliked' the sauce ! " });
-                    }
-                    else {
-                        /* si l'utilisateur est présent dans le tableau usersLiked*/
-                        if ( usersLikedIndex !== -1 ){
-                            /* likes : suppression de l'uilisateur et MAJ du nombres*/
-                            sauce.usersLiked.splice(usersLikedIndex,1);
-                            sauce.likes -= 1;
-                        }
-                        /* dislikes : ajout de l'utilisateur et MAJ du nombres*/
-                        sauce.usersDisliked.push(req.auth.userId);
-                        sauce.dislikes += 1;
 
-                        /* mise à jour du produit dans la BDD*/
-                        sauceModel.updateOne({ _id: req.params.id}, { 
-                            $set : {
-                                likes: sauce.likes,
-                                dislikes: sauce.dislikes,
-                                usersLiked: sauce.usersLiked,
-                                usersDisliked: sauce.usersDisliked
-                            }})
-                            .then(() => res.status(200).json({ message: " successful 'dislike' of this sauce ! " }))
-                            .catch( error => res.status(401).json({ error }));
-                    }
-                    break;
+            let message = " not modified ! ";
+            
+            const like =req.body.like;
+
+            if (like === 1 && usersLikedIndex === -1){
+                if ( usersDislikedIndex !== -1 ){
+                    /* dislikes : suppression de l'uilisateur et MAJ du nombres*/
+                    sauce.usersDisliked.splice(usersDislikedIndex,1);
+                    sauce.dislikes -= 1;
                 }
-                default : {
-                    res.status(401).json({ message: " bad request ! " });
-                }
+                /* likes : ajout de l'utilisateur et MAJ du nombres*/
+                sauce.usersLiked.push(req.auth.userId);
+                sauce.likes += 1;
+                
+                message = " successful 'like' of this sauce ! ";
             }
+
+            if (like === 0){
+                if ( usersLikedIndex !== -1 ) {
+                    /* dislikes : suppression de l'uilisateur et MAJ du nombres*/
+                    sauce.usersLiked.splice(usersLikedIndex,1);
+                    sauce.likes -= 1;
+                }                
+                if ( usersDislikedIndex !== -1 ){
+                    /* dislikes : suppression de l'uilisateur et MAJ du nombres*/
+                    sauce.usersDisliked.splice(usersDislikedIndex,1);
+                    sauce.dislikes -= 1;
+                }
+                message = (usersLikedIndex === -1 && usersDislikedIndex === -1) ? message : " Cancellation of the 'like' or 'dislike' successful ! ";
+            }
+
+            if (like === -1 && usersDislikedIndex === -1){
+                /* si l'utilisateur est présent dans le tableau usersLiked*/
+                if ( usersLikedIndex !== -1 ){
+                    /* likes : suppression de l'uilisateur et MAJ du nombres*/
+                    sauce.usersLiked.splice(usersLikedIndex,1);
+                    sauce.likes -= 1;
+                }
+                /* dislikes : ajout de l'utilisateur et MAJ du nombres*/
+                sauce.usersDisliked.push(req.auth.userId);
+                sauce.dislikes += 1;
+
+                message = " successful 'dislike' of this sauce ! ";
+            }
+            
+            /* mise à jour du produit dans la BDD*/
+            sauceModel.updateOne({ _id: req.params.id}, { 
+                $set : {
+                    likes: sauce.likes,
+                    dislikes: sauce.dislikes,
+                    usersLiked: sauce.usersLiked,
+                    usersDisliked: sauce.usersDisliked
+                }})
+                .then(() => res.status(200).json({ message: message }))
+                .catch( error => res.status(500).json({ error }));
         })
         .catch( error => res.status(500).json({ error }));
 };

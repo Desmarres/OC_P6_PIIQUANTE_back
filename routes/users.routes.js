@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const validationResult = require('../middleware/validationResult');
 const userValidation = require('../middleware/user.req.validation');
-const userCtrl = require('../controllers/user.controllers');
+const userCtrl = require('../controllers/users.controllers');
 
 /* routage des requêtes */
 router.post('/signup', userValidation.signup, // vérification des éléments envoyés

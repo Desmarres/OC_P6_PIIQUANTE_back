@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 /*vérification de la validité de l'authentification*/
 module.exports = (req, res, next) => {
     try {
+        if (!req.headers.authorization) {
+            return res.status(401).json({ message : " You are not authorized ! " });
+        }
         /* récupération du token*/
         const token = req.headers.authorization.split(' ')[1];
 
@@ -18,6 +21,6 @@ module.exports = (req, res, next) => {
     next();
     }
     catch(error) {
-        res.status(401).json({ error });
+        res.status(401).json({ message : " You are not authorized ! " });
     }
 }

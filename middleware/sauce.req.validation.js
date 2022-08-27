@@ -2,14 +2,6 @@
 const { body, param, header } = require('express-validator');
 const sauceModel = require('../models/sauces.models');
 
-/* vérification de la présence d'un token*/
-exports.token = [
-    header('authorization')
-    .exists({ checkFalsy: true})
-    .withMessage(' You are not authorization ! ')
-    .isString()
-    .withMessage(' Bad authorization ! ')
-]
 
 /* vérification de la conformité de l'Id sauce */
 exports.idSauce = [
@@ -53,7 +45,7 @@ exports.sauce = (req, res, next) => {
         next();
     }
     catch(error) {
-        res.status(401).json({ message : error });
+        res.status(400).json({ message : error });
     }
 };
 
