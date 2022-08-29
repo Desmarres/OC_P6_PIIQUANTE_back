@@ -25,9 +25,10 @@ app.use((req, res, next) => {
     next();
 });
 
+
 /* routage des requêtes */
 app.use('/api/auth/',userRoutes);
-app.use('/api/sauces/',sauceRoutes);// contrôle de la validité de l'authentification avant le routage
+app.use('/api/sauces/', sauceRoutes);
 app.use('/resources/images', express.static(path.join(__dirname, 'resources/images')));
 
 /* export de la constante d'application express*/
