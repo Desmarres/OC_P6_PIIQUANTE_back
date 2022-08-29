@@ -2,7 +2,9 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const auth = require('./middleware/sauce.req.auth');
 const { connect } = require('./middleware/db.config');
+const cors = require('cors');
 
 /* fichiers routes des requêtes*/ 
 const userRoutes = require('./routes/users.routes');
@@ -18,17 +20,18 @@ const app = express();
 app.use(express.json());
 
 /* gestion des erreurs de CORS*/
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    next();
-});
+const corsOptions = {
+    origin: '*',
+    allowedHeaders: 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
+    methods:'GET, POST, PUT, DELETE'
+}
+
+app.use(cors(corsOptions));
 
 
 /* routage des requêtes */
 app.use('/api/auth/',userRoutes);
-app.use('/api/sauces/', sauceRoutes);
+app.use('/api/sauces/', auth, sauceRoutes); // contrôle de l'authentification avant le routage
 app.use('/resources/images', express.static(path.join(__dirname, 'resources/images')));
 
 /* export de la constante d'application express*/
