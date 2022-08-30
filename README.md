@@ -46,6 +46,12 @@ Pièce jointe :
 * Middleware : Express-Validator, multer, bcrypt
 * Fonction : Express-Router
 
+## Récupération et mise en route du frontend
+
+Vous trouverez le [lien vers le repo du frontend ici](https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6).  
+Exécutez, à partir du dossier front, "npm install", puis "npm run start" dans le terminal.  
+Vous aurez accès au frontend à l'adresse : [http://localhost:4200/].
+
 ## Mise en route du backend
 
 ### Base de donnée :
@@ -55,7 +61,7 @@ Construire un cluster
 Créer un utilisateur qui peut lire et écrire dans la base de donnée  
 Autoriser l'accès depuis n'importe où  
 
-### Fichier .env:
+### Fichier .env :
 
 Renseigner les élément suivant :    
 
@@ -66,6 +72,10 @@ DB_PASSWORD=pwd (mot de passe de l'utilisateur MongoDB)
 DB_SERVER_NAME=127.0.0.1:27017 (nom du cluster)  
 DATABASE=db_name (nom de la base de donnée)  
 
+### Sauvegarde des images :
+
+Créer le dossier et sous-dossier "resources/images" dans le dossier backend.
+
 ### Démarrage du serveur :
 
-A partir du dossier "backend", éxecuter "node server" dans le terminal. Vous devriez voir le message « Connection to MongoDB successful ! »  
+A partir du dossier "backend", éxecuter "npm install" puis "node server" dans le terminal. Vous devriez voir le message « Connection to MongoDB successful ! »  
