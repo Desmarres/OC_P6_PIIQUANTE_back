@@ -50,7 +50,7 @@ Pièce jointe :
 
 Vous trouverez le [lien vers le repo du frontend ici](https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6).  
 Exécutez, à partir du dossier front, "npm install", puis "npm run start" dans le terminal.  
-Vous aurez accès au frontend à l'adresse : [http://localhost:4200/].
+Vous aurez accès au frontend à l'adresse : [http://localhost:4200/](http://localhost:4200/).
 
 ## Mise en route du backend
 
