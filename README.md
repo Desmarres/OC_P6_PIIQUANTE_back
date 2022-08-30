@@ -68,4 +68,4 @@ DATABASE=db_name (nom de la base de donnée)
 
 ### Démarrage du serveur :
 
-A partir du dossier "backend", éxecuter "node server" dans le terminal. Vous devrez voir le message « Connection to MongoDB successful ! »
+A partir du dossier "backend", éxecuter "node server" dans le terminal. Vous devriez voir le message « Connection to MongoDB successful ! »
