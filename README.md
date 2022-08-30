@@ -50,21 +50,21 @@ Pièce jointe :
 
 ### Base de donnée :
 
-Créer un compte MongoDB Atlas
-Construire un cluster
-Créer un utilisateur qui peut lire et écrire dans la base de donnée
-Autoriser l'accès depuis n'importe où
+Créer un compte MongoDB Atlas  
+Construire un cluster  
+Créer un utilisateur qui peut lire et écrire dans la base de donnée  
+Autoriser l'accès depuis n'importe où  
 
 ### Fichier .env:
 
-Renseigner les élément suivant
+Renseigner les élément suivant :    
 
-TOKEN=token (chaine secrète aléatoire)
-TOKEN_EXPIRATION=1h
-DB_USERNAME=user (nom de l'utilisateur MongoDB)
-DB_PASSWORD=pwd (mot de passe de l'utilisateur MongoDB)
-DB_SERVER_NAME=127.0.0.1:27017 (nom du cluster)
-DATABASE=db_name (nom de la base de donnée)
+TOKEN=token (chaine secrète aléatoire)  
+TOKEN_EXPIRATION=1h  
+DB_USERNAME=user (nom de l'utilisateur MongoDB)  
+DB_PASSWORD=pwd (mot de passe de l'utilisateur MongoDB)  
+DB_SERVER_NAME=127.0.0.1:27017 (nom du cluster)  
+DATABASE=db_name (nom de la base de donnée)  
 
 ### Démarrage du serveur :
 
