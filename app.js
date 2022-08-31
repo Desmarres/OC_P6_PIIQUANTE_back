@@ -10,7 +10,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/users.routes');
 const sauceRoutes = require('./routes/sauces.routes');
 
-/*connexion Monggose*/
+/*connexion BDD*/
 connect();
 
 /* appel de la méthode express*/
